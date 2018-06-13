@@ -12,6 +12,15 @@ Bird = Class{}
 
 local GRAVITY = 20
 
+--[[ CS50: Bird gamestate
+ - JUMPING_STATE: nothing pressed
+ - CHARGING_STATE: spacebar or mouse is pressed
+ - JUMPING_STATE: spacebar or mouse is released and bird is jumping
+]]
+local FALLING_STATE = 'falling'
+local JUMPING_STATE = 'jumping'
+local CHARGING_STATE = 'charging'
+
 function Bird:init()
     self.image = love.graphics.newImage('bird.png')
     self.x = VIRTUAL_WIDTH / 2 - 8
@@ -21,6 +30,11 @@ function Bird:init()
     self.height = self.image:getHeight()
 
     self.dy = 0
+
+    self.timer = 0;
+
+    self.state = FALLING_STATE
+    self.oldState = FALLING_STATE
 end
 
 --[[
@@ -42,14 +56,40 @@ function Bird:collides(pipe)
 end
 
 function Bird:update(dt)
+    --CS50: here keep track of the previous gamestate
+    self.oldState = self.state
+
     self.dy = self.dy + GRAVITY * dt
 
-    -- burst of anti-gravity when space or left mouse are pressed
-    if love.keyboard.wasPressed('space') or love.mouse.wasPressed(1) then
-        self.dy = -5
-        sounds['jump']:play()
+    jumping = love.keyboard.isDown('space') or love.mouse.isDown(1);
+    
+    --[[ CS50: if jump buttons are pressed and bird is FALLING, change the state in CHARGING,
+        otherwise gamestate is not changed ]]
+    if(jumping) then
+        if(self.state == FALLING_STATE) then
+            self.state = CHARGING_STATE
+        end
     end
 
+    --CS50: if jump buttons are not pressed and bird was CHARGING last frame, change the state in JUMPING
+    if(not jumping and self.oldState == CHARGING_STATE) then
+        self.state = JUMPING_STATE
+    end
+
+    --CS50: if bird is CHARGING, keep track for how many frames is in this state
+    if(self.state == CHARGING_STATE) then
+        self.timer = self.timer + 1
+    end
+
+    --CS50: if bird is JUMPING, jump high as much as ( with an upper limit ) charged the jump
+    if(self.state == JUMPING_STATE) then
+        self.dy = -1 * math.min(self.timer, 10)
+        sounds['jump']:play()
+        self.state = FALLING_STATE
+        self.timer = 0
+    end
+
+    --print('jumping: ' .. tostring(jumping), 'oldState: ' ..  self.oldState, 'state: ' .. self.state, 'timer: ' .. self.timer)
     self.y = self.y + self.dy
 end
 
