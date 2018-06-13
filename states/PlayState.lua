@@ -31,17 +31,20 @@ function PlayState:update(dt)
     -- update timer for pipe spawning
     self.timer = self.timer + dt
 
+    -- CS50: randomized the pipes spawn interval
+    local spawnTime = love.math.random(1.5, 6)
+
     -- spawn a new pipe pair every second and a half
     if self.timer > 2 then
         -- modify the last Y coordinate we placed so pipe gaps aren't too far apart
         -- no higher than 10 pixels below the top edge of the screen,
         -- and no lower than a gap length (90 pixels) from the bottom
         local y = math.max(-PIPE_HEIGHT + 10, 
-            math.min(self.lastY + math.random(-20, 20), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT))
+            math.min(self.lastY + math.random(-20, 20), VIRTUAL_HEIGHT - gapHeight - PIPE_HEIGHT))
         self.lastY = y
 
         -- add a new pipe pair at the end of the screen at our new Y
-        table.insert(self.pipePairs, PipePair(y))
+        table.insert(self.pipePairs, PipePair(y, self.bird))
 
         -- reset timer
         self.timer = 0
