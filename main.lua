@@ -62,7 +62,7 @@ local GROUND_SCROLL_SPEED = 160
 
 local BACKGROUND_LOOPING_POINT = 413
 
-debugState = false;
+pause = false;
 
 function love.load()
     -- initialize our nearest-neighbor filter
@@ -108,8 +108,7 @@ function love.load()
         ['title'] = function() return TitleScreenState() end,
         ['countdown'] = function() return CountdownState() end,
         ['play'] = function() return PlayState() end,
-        ['score'] = function() return ScoreState() end,
-        ['pause'] = function() return PauseState() end
+        ['score'] = function() return ScoreState() end
     }
     gStateMachine:change('title')
 
@@ -130,6 +129,15 @@ function love.keypressed(key)
 
     if key == 'escape' then
         love.event.quit()
+    end
+
+    -- CS50 : added pause button
+    if key == 'p' then
+        if pause == false then
+            pause = true
+        else
+            pause = false
+        end
     end
 end
 
@@ -157,10 +165,15 @@ function love.mouse.wasPressed(button)
 end
 
 function love.update(dt)
+
+    -- CS50: stop updating the game when game is paused
+    if(pause) then
+        return;
+    end
+
     -- scroll our background and ground, looping back to 0 after a certain amount
     backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
     groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
-
     gStateMachine:update(dt)
 
     love.keyboard.keysPressed = {}
@@ -170,9 +183,22 @@ end
 function love.draw()
     push:start()
     
+    --[[ CS50: stop rendering the game when game is paused and render pause message.
+    Pause the music too
+    ]]
+    if(pause) then
+        sounds['music']:pause()
+        love.graphics.draw(background, -backgroundScroll, 0)
+        love.graphics.setFont(flappyFont)
+        love.graphics.printf('Oof! You lost!', 0, 64, VIRTUAL_WIDTH, 'center')
+    else
+    
+    sounds['music']:resume()
     love.graphics.draw(background, -backgroundScroll, 0)
     gStateMachine:render()
     love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT - 16)
+
+    end
     
     push:finish()
 end

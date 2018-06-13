@@ -42,16 +42,14 @@ function ScoreState:render()
     love.graphics.setFont(mediumFont)
     love.graphics.printf('Score: ' .. tostring(self.score), 0, 100, VIRTUAL_WIDTH, 'center')
 
-    self.score = 20
     -- CS50 : Display a medal based on score accumulated
     if self.score < 5 then
-        love.graphics.draw(achievements, bronze, VIRTUAL_WIDTH/2 - 32, 120)
+        love.graphics.draw(achievements, bronze, VIRTUAL_WIDTH/2 - 32, 110)
     elseif self.score > 15 then
-        love.graphics.draw(achievements, gold, VIRTUAL_WIDTH/2 - 32, 120)
+        love.graphics.draw(achievements, gold, VIRTUAL_WIDTH/2 - 32, 110)
     else
-        love.graphics.draw(achievements, silver, VIRTUAL_WIDTH/2 - 32, 120)
+        love.graphics.draw(achievements, silver, VIRTUAL_WIDTH/2 - 32, 110)
     end
-    
 
-    love.graphics.printf('Press Enter to Play Again!', 0, 180, VIRTUAL_WIDTH, 'center')
+    love.graphics.printf('Press Enter to Play Again!', 0, 174, VIRTUAL_WIDTH, 'center')
 end

@@ -83,9 +83,7 @@ function PlayState:update(dt)
                 sounds['explosion']:play()
                 sounds['hurt']:play()
 
-                gStateMachine:change('score', {
-                    score = self.score
-                })
+                self.score()
             end
         end
     end
@@ -98,9 +96,7 @@ function PlayState:update(dt)
         sounds['explosion']:play()
         sounds['hurt']:play()
 
-        gStateMachine:change('score', {
-            score = self.score
-        })
+        score(self)
     end
 
     -- CS50: fixed THE bug
@@ -108,9 +104,7 @@ function PlayState:update(dt)
         sounds['explosion']:play()
         sounds['hurt']:play()
 
-        gStateMachine:change('score', {
-            score = self.score
-        })
+        score(self)
     end
 end
 
@@ -123,6 +117,13 @@ function PlayState:render()
     love.graphics.print('Score: ' .. tostring(self.score), 8, 8)
 
     self.bird:render()
+end
+
+-- CS50: function called to change to ScoreState passing the score too
+function score(self)
+    gStateMachine:change('score', {
+        score = self.score
+    })
 end
 
 --[[
