@@ -35,6 +35,7 @@ function Bird:init()
 
     self.state = FALLING_STATE
     self.oldState = FALLING_STATE
+    self.life = 2
 end
 
 --[[
@@ -78,12 +79,12 @@ function Bird:update(dt)
 
     --CS50: if bird is CHARGING, keep track for how many frames is in this state
     if(self.state == CHARGING_STATE) then
-        self.timer = self.timer + 1
+        self.timer = self.timer + 0.5
     end
 
     --CS50: if bird is JUMPING, jump high as much as ( with an upper limit ) charged the jump
     if(self.state == JUMPING_STATE) then
-        self.dy = -1 * math.min(self.timer, 10)
+        self.dy = -1 * math.min(self.timer, 8)
         sounds['jump']:play()
         self.state = FALLING_STATE
         self.timer = 0

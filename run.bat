@@ -1,1 +1,1 @@
-"C:\Program Files\LOVE10.2\love.exe" . --console
+"C:\Program Files\love-0.10.2-win64\love.exe" . --console

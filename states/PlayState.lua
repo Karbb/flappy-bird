@@ -10,7 +10,7 @@
 
 PlayState = Class{__includes = BaseState}
 
-PIPE_SPEED = 60
+PIPE_SPEED = 160
 PIPE_WIDTH = 70
 PIPE_HEIGHT = 288
 
@@ -32,10 +32,10 @@ function PlayState:update(dt)
     self.timer = self.timer + dt
 
     -- CS50: randomized the pipes spawn interval
-    local spawnTime = love.math.random(1.5, 6)
+    local spawnTime = love.math.random(2, 8)
 
     -- spawn a new pipe pair every second and a half
-    if self.timer > 2 then
+    if self.timer > spawnTime then
         -- modify the last Y coordinate we placed so pipe gaps aren't too far apart
         -- no higher than 10 pixels below the top edge of the screen,
         -- and no lower than a gap length (90 pixels) from the bottom
@@ -95,6 +95,16 @@ function PlayState:update(dt)
 
     -- reset if we get to the ground
     if self.bird.y > VIRTUAL_HEIGHT - 15 then
+        sounds['explosion']:play()
+        sounds['hurt']:play()
+
+        gStateMachine:change('score', {
+            score = self.score
+        })
+    end
+
+    -- CS50: fixed THE bug
+    if self.bird.y < - 15 then
         sounds['explosion']:play()
         sounds['hurt']:play()
 
