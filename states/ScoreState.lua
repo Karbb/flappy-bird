@@ -10,6 +10,15 @@
 
 ScoreState = Class{__includes = BaseState}
 
+--[[ CS50: load metals sprites
+https://opengameart.org/users/buch
+]]
+local achievements = love.graphics.newImage('medals.png')
+
+local bronze = love.graphics.newQuad(0, 0, 64, 64, achievements:getDimensions())
+local silver = love.graphics.newQuad(64, 0, 64, 64, achievements:getDimensions())
+local gold = love.graphics.newQuad(128, 0, 64, 64, achievements:getDimensions())
+
 --[[
     When we enter the score state, we expect to receive the score
     from the play state so we know what to render to the State.
@@ -33,5 +42,16 @@ function ScoreState:render()
     love.graphics.setFont(mediumFont)
     love.graphics.printf('Score: ' .. tostring(self.score), 0, 100, VIRTUAL_WIDTH, 'center')
 
-    love.graphics.printf('Press Enter to Play Again!', 0, 160, VIRTUAL_WIDTH, 'center')
+    self.score = 20
+    -- CS50 : Display a medal based on score accumulated
+    if self.score < 5 then
+        love.graphics.draw(achievements, bronze, VIRTUAL_WIDTH/2 - 32, 120)
+    elseif self.score > 15 then
+        love.graphics.draw(achievements, gold, VIRTUAL_WIDTH/2 - 32, 120)
+    else
+        love.graphics.draw(achievements, silver, VIRTUAL_WIDTH/2 - 32, 120)
+    end
+    
+
+    love.graphics.printf('Press Enter to Play Again!', 0, 180, VIRTUAL_WIDTH, 'center')
 end
