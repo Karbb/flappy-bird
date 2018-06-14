@@ -18,6 +18,9 @@ BIRD_WIDTH = 38
 BIRD_HEIGHT = 24
 
 function PlayState:init()
+    --CS50: initialize the heart image
+    self.heart = love.graphics.newImage('heart.png')
+
     self.bird = Bird()
     self.pipePairs = {}
     self.timer = 0
@@ -25,17 +28,20 @@ function PlayState:init()
 
     -- initialize our last recorded Y value for a gap placement to base other gaps off of
     self.lastY = -PIPE_HEIGHT + math.random(80) + 20
+
+    -- CS50: initialize the first pipe to be spawned after 1.5 seconds
+    self.spawnTime = 2
+
+    -- CS50: initialize the bird lives
+    self.lives = 2
 end
 
 function PlayState:update(dt)
     -- update timer for pipe spawning
     self.timer = self.timer + dt
 
-    -- CS50: randomized the pipes spawn interval
-    local spawnTime = love.math.random(2, 8)
-
-    -- spawn a new pipe pair every second and a half
-    if self.timer > spawnTime then
+    -- spawn a new pipe pair
+    if self.timer > self.spawnTime then
         -- modify the last Y coordinate we placed so pipe gaps aren't too far apart
         -- no higher than 10 pixels below the top edge of the screen,
         -- and no lower than a gap length (90 pixels) from the bottom
@@ -48,6 +54,9 @@ function PlayState:update(dt)
 
         -- reset timer
         self.timer = 0
+
+        -- CS50: randomized the pipes spawn interval
+        self.spawnTime = love.math.random(2, 8)
     end
 
     -- for every pair of pipes..
@@ -83,7 +92,7 @@ function PlayState:update(dt)
                 sounds['explosion']:play()
                 sounds['hurt']:play()
 
-                self.score()
+                collision(self)
             end
         end
     end
@@ -96,7 +105,7 @@ function PlayState:update(dt)
         sounds['explosion']:play()
         sounds['hurt']:play()
 
-        score(self)
+        collision(self)
     end
 
     -- CS50: fixed THE bug
@@ -104,7 +113,7 @@ function PlayState:update(dt)
         sounds['explosion']:play()
         sounds['hurt']:play()
 
-        score(self)
+        collision(self)
     end
 end
 
@@ -116,14 +125,36 @@ function PlayState:render()
     love.graphics.setFont(flappyFont)
     love.graphics.print('Score: ' .. tostring(self.score), 8, 8)
 
+    -- CS50: Draw remaining lifes on screen as hearts
+    for i = 0, self.lives - 1 do
+        love.graphics.draw(self.heart, i * 64, VIRTUAL_HEIGHT - 80 * 0.5)
+    end
+
     self.bird:render()
 end
 
 -- CS50: function called to change to ScoreState passing the score too
-function score(self)
-    gStateMachine:change('score', {
-        score = self.score
-    })
+function collision(self)
+
+    if(start == nil) then
+        self.lives = self.lives - 1
+        start = love.timer.getTime()
+
+        if(self.lives < 0) then
+            gStateMachine:change('score', {
+                score = self.score
+            })
+        else
+            self.flickering = true;
+        end
+    else
+        if(love.timer.getTime() - start > 2) then
+            self.flickering = false;
+            start = nil
+        end
+    end
+
+
 end
 
 --[[

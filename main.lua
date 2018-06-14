@@ -189,8 +189,8 @@ function love.draw()
     if(pause) then
         sounds['music']:pause()
         love.graphics.draw(background, -backgroundScroll, 0)
-        love.graphics.setFont(flappyFont)
-        love.graphics.printf('Oof! You lost!', 0, 64, VIRTUAL_WIDTH, 'center')
+        love.graphics.setFont(hugeFont)
+        love.graphics.printf('GAME PAUSED', 0, 64, VIRTUAL_WIDTH, 'center')
     else
     
     sounds['music']:resume()

@@ -36,6 +36,8 @@ function Bird:init()
     self.state = FALLING_STATE
     self.oldState = FALLING_STATE
     self.life = 2
+
+    self.flickering = false
 end
 
 --[[
@@ -95,5 +97,12 @@ function Bird:update(dt)
 end
 
 function Bird:render()
+    if(self.flickering) then
+        flickeringBird()
+    end
     love.graphics.draw(self.image, self.x, self.y)
+end
+
+function flickeringBird()
+    love.graphics.setColor(0,0,0,128)
 end
