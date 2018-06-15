@@ -13,7 +13,8 @@ PipePair = Class{}
 -- size of the gap between pipes
 gapHeight = 90
 
-function PipePair:init(y, bird)
+function PipePair:init(y, bird, fixedGapHeight)
+
     -- flag to hold whether this pair has been scored (jumped through)
     self.scored = false
 
@@ -24,7 +25,12 @@ function PipePair:init(y, bird)
     self.y = y
 
     -- CS50: added pipes gap random distance
-    gapHeight = love.math.random(bird.height * 3, 90 * 1.5)
+    if(not fixedGapHeight or fixedGapHeight == false) then
+        gapHeight = love.math.random(bird.height * 3, 90 * 1.5)
+    else
+        gapHeight = 90  
+    end
+
     -- instantiate two pipes that belong to this pair
     self.pipes = {
         ['upper'] = Pipe('top', self.y),

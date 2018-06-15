@@ -34,6 +34,9 @@ function PlayState:init()
 
     -- CS50: initialize the bird lives
     self.lives = 2
+
+    self.🎿🐶qty = 0
+    self.🎿🐶bool = false
 end
 
 function PlayState:update(dt)
@@ -47,16 +50,41 @@ function PlayState:update(dt)
         -- and no lower than a gap length (90 pixels) from the bottom
         local y = math.max(-PIPE_HEIGHT + 10, 
             math.min(self.lastY + math.random(-20, 20), VIRTUAL_HEIGHT - gapHeight - PIPE_HEIGHT))
+        
+        -- CS50: randomized the pipes spawn interval
+        self.spawnTime = math.random(2, 8)
+
+        --[[ CS50: 🎿🐶
+            ACTIVATE SCICANE
+        ]]
+        if math.random(0, 100) > 85 and self.🎿🐶bool == false then
+            self.🎿🐶bool = true
+            self.🎿🐶qty = math.random(5, 15)
+            self.🎿🐶direction = math.random(-1, 1)
+        end
+
+        --[[ CS50: 🎿🐶
+            SPAWNING SCICANESSS
+        ]]
+        if(self.🎿🐶bool and self.🎿🐶qty > 0) then
+            self.spawnTime = 0.5
+            self.🎿🐶qty = self.🎿🐶qty - 1
+
+            y = math.max(- PIPE_HEIGHT + 10, 
+            math.min(self.lastY + (self.🎿🐶direction * 20), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT))
+
+            if(y == - PIPE_HEIGHT + 10 or y == VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT) then
+                self.🎿🐶direction = self.🎿🐶direction * - 1
+            end
+        end
+
         self.lastY = y
 
         -- add a new pipe pair at the end of the screen at our new Y
-        table.insert(self.pipePairs, PipePair(y, self.bird))
+        table.insert(self.pipePairs, PipePair(y, self.bird, self.🎿🐶bool))
 
         -- reset timer
         self.timer = 0
-
-        -- CS50: randomized the pipes spawn interval
-        self.spawnTime = love.math.random(2, 8)
     end
 
     -- for every pair of pipes..
@@ -106,14 +134,16 @@ function PlayState:update(dt)
         sounds['hurt']:play()
 
         collision(self)
+        self.bird:reset()
     end
 
-    -- CS50: fixed THE bug
+    -- CS50: fixed THE bug. Added ceiling collision
     if self.bird.y < - 15 then
         sounds['explosion']:play()
         sounds['hurt']:play()
 
         collision(self)
+        bird:reset()
     end
 end
 
@@ -133,28 +163,23 @@ function PlayState:render()
     self.bird:render()
 end
 
--- CS50: function called to change to ScoreState passing the score too
+-- CS50: utility function to manage collision conseguences
 function collision(self)
 
-    if(start == nil) then
+    -- remove heart when not invincible
+    if self.bird.invicibility <= 0 then
         self.lives = self.lives - 1
-        start = love.timer.getTime()
-
+      
+        -- 0 lives --> score
         if(self.lives < 0) then
             gStateMachine:change('score', {
                 score = self.score
             })
         else
-            self.flickering = true;
-        end
-    else
-        if(love.timer.getTime() - start > 2) then
-            self.flickering = false;
-            start = nil
+            -- start invicibility period
+            self.bird.invicibility = 2;
         end
     end
-
-
 end
 
 --[[

@@ -192,12 +192,10 @@ function love.draw()
         love.graphics.setFont(hugeFont)
         love.graphics.printf('GAME PAUSED', 0, 64, VIRTUAL_WIDTH, 'center')
     else
-    
-    sounds['music']:resume()
-    love.graphics.draw(background, -backgroundScroll, 0)
-    gStateMachine:render()
-    love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT - 16)
-
+        sounds['music']:resume()
+        love.graphics.draw(background, -backgroundScroll, 0)
+        love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT - 16)
+        gStateMachine:render()
     end
     
     push:finish()

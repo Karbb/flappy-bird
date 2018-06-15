@@ -37,7 +37,15 @@ function Bird:init()
     self.oldState = FALLING_STATE
     self.life = 2
 
-    self.flickering = false
+-- CS50: invincibility attribute
+    self.invicibility = 0
+end
+
+-- CS50: function called to reset starting position when bird collides with top or bottom border
+function Bird:reset()
+    self.x = VIRTUAL_WIDTH / 2 - 8
+    self.y = VIRTUAL_HEIGHT / 2 - 8
+    self.dy = 0
 end
 
 --[[
@@ -94,15 +102,24 @@ function Bird:update(dt)
 
     --print('jumping: ' .. tostring(jumping), 'oldState: ' ..  self.oldState, 'state: ' .. self.state, 'timer: ' .. self.timer)
     self.y = self.y + self.dy
+
+    -- CS50: invincibility countdown
+    if(self.invicibility > 0) then
+        self.invicibility = self.invicibility - dt
+    end
 end
 
 function Bird:render()
-    if(self.flickering) then
+    
+    -- CS50: flickering rendering
+    if(self.invicibility > 0) then
         flickeringBird()
     end
+
     love.graphics.draw(self.image, self.x, self.y)
+    love.graphics.setColor(255, 255, 255, 255)
 end
 
 function flickeringBird()
-    love.graphics.setColor(0,0,0,128)
+    love.graphics.setColor(255,255,255,10)
 end
