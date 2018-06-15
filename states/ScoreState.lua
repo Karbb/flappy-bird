@@ -13,7 +13,7 @@ ScoreState = Class{__includes = BaseState}
 --[[ CS50: load metals sprites
 https://opengameart.org/users/buch
 ]]
-local achievements = love.graphics.newImage('medals.png')
+local achievements = love.graphics.newImage('assets/sprites/medals.png')
 
 local bronze = love.graphics.newQuad(0, 0, 64, 64, achievements:getDimensions())
 local silver = love.graphics.newQuad(64, 0, 64, 64, achievements:getDimensions())

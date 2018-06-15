@@ -22,7 +22,7 @@ local JUMPING_STATE = 'jumping'
 local CHARGING_STATE = 'charging'
 
 function Bird:init()
-    self.image = love.graphics.newImage('bird.png')
+    self.image = love.graphics.newImage('assets/sprites/bird.png')
     self.x = VIRTUAL_WIDTH / 2 - 8
     self.y = VIRTUAL_HEIGHT / 2 - 8
 
