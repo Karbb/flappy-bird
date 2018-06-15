@@ -143,7 +143,7 @@ function PlayState:update(dt)
         sounds['hurt']:play()
 
         collision(self)
-        bird:reset()
+        self.bird:reset()
     end
 end
 
@@ -157,7 +157,7 @@ function PlayState:render()
 
     -- CS50: Draw remaining lifes on screen as hearts
     for i = 0, self.lives - 1 do
-        love.graphics.draw(self.heart, i * 64, VIRTUAL_HEIGHT - 80 * 0.5)
+        love.graphics.draw(self.heart, i * 64 + 10, VIRTUAL_HEIGHT - self.heart:getHeight() - 10)
     end
 
     self.bird:render()

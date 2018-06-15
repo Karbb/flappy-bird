@@ -39,6 +39,7 @@ function Bird:init()
 
 -- CS50: invincibility attribute
     self.invicibility = 0
+    self.flickering = false
 end
 
 -- CS50: function called to reset starting position when bird collides with top or bottom border
@@ -113,13 +114,20 @@ function Bird:render()
     
     -- CS50: flickering rendering
     if(self.invicibility > 0) then
-        flickeringBird()
+        flickeringBird(self)
     end
-
+    
     love.graphics.draw(self.image, self.x, self.y)
     love.graphics.setColor(255, 255, 255, 255)
+    
 end
 
-function flickeringBird()
-    love.graphics.setColor(255,255,255,10)
+function flickeringBird(self)
+    if(self.flickering) then
+        love.graphics.setColor(255,255,255,0)
+        self.flickering = not self.flickering
+    else
+        love.graphics.setColor(255, 255, 255, 255)
+        self.flickering = not self.flickering
+    end
 end

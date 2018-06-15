@@ -133,11 +133,7 @@ function love.keypressed(key)
 
     -- CS50 : added pause button
     if key == 'p' then
-        if pause == false then
-            pause = true
-        else
-            pause = false
-        end
+        pause = not pause
     end
 end
 
@@ -166,18 +162,17 @@ end
 
 function love.update(dt)
 
-    -- CS50: stop updating the game when game is paused
-    if(pause) then
-        return;
+    -- CS50: update only when the game is not paused
+    if(not pause) then
+        -- scroll our background and ground, looping back to 0 after a certain amount
+        backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
+        groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
+        gStateMachine:update(dt)
+
+        love.keyboard.keysPressed = {}
+        love.mouse.buttonsPressed = {}
     end
 
-    -- scroll our background and ground, looping back to 0 after a certain amount
-    backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
-    groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
-    gStateMachine:update(dt)
-
-    love.keyboard.keysPressed = {}
-    love.mouse.buttonsPressed = {}
 end
 
 function love.draw()
