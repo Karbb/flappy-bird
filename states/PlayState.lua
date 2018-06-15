@@ -19,7 +19,7 @@ BIRD_HEIGHT = 24
 
 function PlayState:init()
     --CS50: initialize the heart image
-    self.heart = love.graphics.newImage('heart.png')
+    self.heart = love.graphics.newImage('assets/sprites/heart.png')
 
     self.bird = Bird()
     self.pipePairs = {}
